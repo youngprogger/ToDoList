@@ -1,20 +1,9 @@
 import './App.css';
 import React from 'react';
 
+import TaskList from './components/TaskList/TaskList'
+import TaskAdd from './components/TaskAdd/TaskAdd'
 
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <div>
-        <div><h1>Задачи на неделю:</h1></div>
-          <MyTodoList/>
-        </div>
-      </header>
-    </div>
-  );
-}
 class MyTodoList extends React.Component {
   state = {
     tasks: [{
@@ -55,39 +44,67 @@ class MyTodoList extends React.Component {
     }
   ]
   };
-  clickHandler = () => {
-    return console.log(`Task ${this.state.id} completed status = ${this.state.completed}`)
+
+  // СОЗДАТЬ НОВУЮ ЗАДАЧУ
+  submitHandler = (event) => {
+    event.preventDefault()
+
+    const name = document.getElementsByName('taskName')[0].value // инпут названия таска
+    const description = document.getElementsByName('taskDescription')[0].value // инпут описания таска
+
+    description&&name ? this.setState( (prevState) => { // если поля desription и name заполнены.. 
+      const newTasksArr = [...prevState.tasks] // дублируем таски из стейта
+      const tasksLastID = newTasksArr.length // присвоем IDшник новой таске = +1 к последнему таскID из стейта
+      newTasksArr[tasksLastID] = { // если name и desciption заполнены..
+        id: tasksLastID+1, // то творим новый объект для нового таска
+        name: name,
+        description: description,
+        completed: false
+      } 
+
+      return {
+        tasks: newTasksArr //.. то обновляем стейт
+      }
+    })
+    : alert('Enter name and description!') // ..а если пусты, то алёртим пользователя, чтобы тот внес данные
+  }
+
+  // СМЕНИТЬ СТАТУС ЗАДАЧИ - completed поставить TRUE или FALSE
+  handleTaskStatus = (event) => {
+    const clickedBtn = event.target 
+    const taskID = clickedBtn.closest('div').id
+    this.setState((prevState) => {
+      const newTasksArr = [...prevState.tasks] // дублируем стейт
+      newTasksArr[taskID-1] = { ...newTasksArr[taskID-1], completed: !prevState.tasks[taskID-1].completed } // инвертируем булевое значение
+      return {
+        tasks: newTasksArr // сетим новым стейт
+      }
+    })
   }
 
   render() {
-    const tasks = this.state.tasks    
-    return (
-      tasks.map( (task) => { 
-        return(
-          <TaskComplete
-            key={task.id}
-            id={task.id}
-            name={task.name}
-            description={task.description}
-            completed={task.completed}
-            onClick={this.clickHandler}
-          />
-        )
-      })
-    )
+    const tasks = this.state.tasks
+
+    return (  
+      <React.Fragment>
+          <TaskAdd onSubmit={this.submitHandler}/>
+          <TaskList tasksArr={tasks} onClick={this.handleTaskStatus}/>
+      </React.Fragment>)
   }
 }
-const TaskComplete = ({ id, name, description, completed }) => {
-  const handleClick = () => {if (completed === true){completed = false } else {completed = true} return (console.log(`Task ${id} completed status = ${completed}`)) }
 
+
+function App() {
   return (
-    <div id={id}>
-        <h4 className="task">{name}</h4>
-        <p className="task">{description}</p>
-        <p className="task">{completed.toString()}</p>
-        <button className="button1" onClick={handleClick}>Done</button>
+    <div className="App">
+      <header className="App-header">
+        <div>
+        <div><h1>Задачи на неделю:</h1></div>
+          <MyTodoList/>
+        </div>
+      </header>
     </div>
-  )
+  );
 }
 
 
