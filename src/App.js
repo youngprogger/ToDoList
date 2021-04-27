@@ -1,23 +1,16 @@
-import logo from './logo.svg';
 import './App.css';
 import React from 'react';
+
+
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <div>
+        <div><h1>Задачи на неделю:</h1></div>
           <MyTodoList/>
         </div>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
     </div>
   );
@@ -25,21 +18,39 @@ function App() {
 class MyTodoList extends React.Component {
   state = {
     tasks: [{
-      id: 1234,
-      name: 'Name of the task',
-      description: 'What needs to be done',
+      id: 1,
+      name: 'Visit my grandma',
+      description: 'On friday i should visit my grandma and spent time with she',
       completed: true
     },
     {
-      id: 1235,
-      name: 'Name of the task',
-      description: 'What needs to be done',
+      id: 2,
+      name: 'Dedline at my ux/ui design courses',
+      description: 'I should add my new work on Behance',
+      completed: false
+    },
+    {
+      id: 3,
+      name: 'Buy Tesla shares',
+      description: 'This is a perfect moment to buy Tesla shares this weekend',
+      completed: false
+    },
+    {
+      id: 4,
+      name: 'Go to the Gym',
+      description: 'I nevet went to the gym after my illness. It is time to get in shape!',
       completed: true
     },
     {
-      id: 1236,
-      name: 'Name of the task',
-      description: 'What needs to be done',
+      id: 5,
+      name: 'Coursework',
+      description: 'It is time to start my coursework',
+      completed: false
+    },
+    {
+      id: 6,
+      name: 'Work deadline',
+      description: "It's time to start my coursework",
       completed: true
     }
   ]
@@ -71,10 +82,10 @@ const TaskComplete = ({ id, name, description, completed }) => {
 
   return (
     <div id={id}>
-        <h4>{name}</h4>
-        <p>{description}</p>
-        <p>{completed.toString()}</p>
-        <button onClick={handleClick}/>
+        <h4 className="task">{name}</h4>
+        <p className="task">{description}</p>
+        <p className="task">{completed.toString()}</p>
+        <button className="button1" onClick={handleClick}>Done</button>
     </div>
   )
 }
