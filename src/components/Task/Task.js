@@ -6,7 +6,7 @@ const Task = ({ id, name, description, completed, onClick }) => {
           <h4 className="task">{name}</h4>
           <p className="task">{description}</p>
           <p className="task">{completed.toString()}</p>
-          <button className="button1" onClick={onClick}>{!completed ? 'Done' : 'Undone'}</button>
+          <button className="button1" onClick={() => onClick(id)}>{!completed ? 'Done' : 'Undone'}</button>
       </div>
     )
   }

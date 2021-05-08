@@ -45,39 +45,39 @@ class MyTodoList extends React.Component {
   ]
   };
 
-  // СОЗДАТЬ НОВУЮ ЗАДАЧУ
-  submitHandler = (event) => {
-    event.preventDefault()
-
-    const name = document.getElementsByName('taskName')[0].value // инпут названия таска
-    const description = document.getElementsByName('taskDescription')[0].value // инпут описания таска
-
-    description&&name ? this.setState( (prevState) => { // если поля desription и name заполнены.. 
-      const newTasksArr = [...prevState.tasks] // дублируем таски из стейта
-      const tasksLastID = newTasksArr.length // присвоем IDшник новой таске = +1 к последнему таскID из стейта
-      newTasksArr[tasksLastID] = { // если name и desciption заполнены..
-        id: tasksLastID+1, // то творим новый объект для нового таска
-        name: name,
-        description: description,
-        completed: false
-      } 
-
-      return {
-        tasks: newTasksArr //.. то обновляем стейт
+  
+  submitHandler = (name, description) => {
+    console.log(name, description)
+    if (name && description) {
+      this.setState( (prevState) => { 
+        const newTasksArr = [...prevState.tasks] 
+        const tasksLastID = newTasksArr.length 
+        newTasksArr[tasksLastID] = { 
+          id: tasksLastID+1, 
+          name: name,
+          description: description,
+          completed: false
+        }
+        return {
+          tasks: newTasksArr
+          }
+        })
       }
-    })
-    : alert('Enter name and description!') // ..а если пусты, то алёртим пользователя, чтобы тот внес данные
+    else {
+      return alert('Enter task name and description')
+    }
   }
 
-  // СМЕНИТЬ СТАТУС ЗАДАЧИ - completed поставить TRUE или FALSE
-  handleTaskStatus = (event) => {
-    const clickedBtn = event.target 
-    const taskID = clickedBtn.closest('div').id
-    this.setState((prevState) => {
-      const newTasksArr = [...prevState.tasks] // дублируем стейт
-      newTasksArr[taskID-1] = { ...newTasksArr[taskID-1], completed: !prevState.tasks[taskID-1].completed } // инвертируем булевое значение
+  
+  handleTaskStatus = (taskID) => {
+    
+    const tasks = this.state.tasks;
+    const taskToChangeStatusID = tasks.findIndex( (task) => task.id === taskID )
+    this.setState((currState) => {
+      const newTasksArr = [...currState.tasks] 
+      newTasksArr[taskToChangeStatusID] = { ...newTasksArr[taskToChangeStatusID], completed: !currState.tasks[taskToChangeStatusID].completed }
       return {
-        tasks: newTasksArr // сетим новым стейт
+        tasks: newTasksArr 
       }
     })
   }
@@ -99,7 +99,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <div>
-        <div><h1>Задачи на неделю:</h1></div>
+        <div><h1>Weekly Tasks:</h1></div>
           <MyTodoList/>
         </div>
       </header>
