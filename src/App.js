@@ -1,20 +1,9 @@
 import './App.css';
 import React from 'react';
 
+import TaskList from './components/TaskList/TaskList'
+import TaskAdd from './components/TaskAdd/TaskAdd'
 
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <div>
-        <div><h1>Задачи на неделю:</h1></div>
-          <MyTodoList/>
-        </div>
-      </header>
-    </div>
-  );
-}
 class MyTodoList extends React.Component {
   state = {
     tasks: [{
@@ -55,39 +44,67 @@ class MyTodoList extends React.Component {
     }
   ]
   };
-  clickHandler = () => {
-    return console.log(`Task ${this.state.id} completed status = ${this.state.completed}`)
+
+  
+  submitHandler = (name, description) => {
+    console.log(name, description)
+    if (name && description) {
+      this.setState( (prevState) => { 
+        const newTasksArr = [...prevState.tasks] 
+        const tasksLastID = newTasksArr.length 
+        newTasksArr[tasksLastID] = { 
+          id: tasksLastID+1, 
+          name: name,
+          description: description,
+          completed: false
+        }
+        return {
+          tasks: newTasksArr
+          }
+        })
+      }
+    else {
+      return alert('Enter task name and description')
+    }
+  }
+
+  
+  handleTaskStatus = (taskID) => {
+    
+    const tasks = this.state.tasks;
+    const taskToChangeStatusID = tasks.findIndex( (task) => task.id === taskID )
+    this.setState((currState) => {
+      const newTasksArr = [...currState.tasks] 
+      newTasksArr[taskToChangeStatusID] = { ...newTasksArr[taskToChangeStatusID], completed: !currState.tasks[taskToChangeStatusID].completed }
+      return {
+        tasks: newTasksArr 
+      }
+    })
   }
 
   render() {
-    const tasks = this.state.tasks    
-    return (
-      tasks.map( (task) => { 
-        return(
-          <TaskComplete
-            key={task.id}
-            id={task.id}
-            name={task.name}
-            description={task.description}
-            completed={task.completed}
-            onClick={this.clickHandler}
-          />
-        )
-      })
-    )
+    const tasks = this.state.tasks
+
+    return (  
+      <React.Fragment>
+          <TaskAdd onSubmit={this.submitHandler}/>
+          <TaskList tasksArr={tasks} onClick={this.handleTaskStatus}/>
+      </React.Fragment>)
   }
 }
-const TaskComplete = ({ id, name, description, completed }) => {
-  const handleClick = () => {if (completed === true){completed = false } else {completed = true} return (console.log(`Task ${id} completed status = ${completed}`)) }
 
+
+function App() {
   return (
-    <div id={id}>
-        <h4 className="task">{name}</h4>
-        <p className="task">{description}</p>
-        <p className="task">{completed.toString()}</p>
-        <button className="button1" onClick={handleClick}>Done</button>
+    <div className="App">
+      <header className="App-header">
+        <div>
+        <div><h1>Weekly Tasks:</h1></div>
+          <MyTodoList/>
+        </div>
+      </header>
     </div>
-  )
+  );
 }
 
 
