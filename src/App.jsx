@@ -1,11 +1,16 @@
-import './App.css';
 import React from 'react';
+import classnames from "classnames/bind"
+import styles from "./App.module.scss"
+
 
 import TaskList from './components/TaskList/TaskList'
 import TaskAdd from './components/TaskAdd/TaskAdd'
 
+const cx = classnames.bind(styles)
+
 class MyTodoList extends React.Component {
   state = {
+    theme: "dark",
     tasks: [{
       id: 1,
       name: 'Visit my grandma',
@@ -68,6 +73,9 @@ class MyTodoList extends React.Component {
     }
   }
 
+  handleThemeChange = event => {
+    this.setState({ theme: event.target.value })
+  }
   
   handleTaskStatus = (taskID) => {
     
@@ -86,23 +94,53 @@ class MyTodoList extends React.Component {
     const tasks = this.state.tasks
 
     return (  
-      <React.Fragment>
+          
+      <header className={cx(`App-header-theme-${this.state.theme}`)}>
+        <div>
+            <input
+              type="radio"
+              name="theme"
+              id="light"
+              value="light"
+              checked={this.state.theme === "light"}
+              onChange={this.handleThemeChange}
+            />
+            <label htmlFor="light">Light theme</label>
+          </div>
+
+          <div>
+            <input
+              type="radio"
+              name="theme"
+              id="dark"
+              value="dark"
+              checked={this.state.theme === "dark"}
+              onChange={this.handleThemeChange}
+            />
+            <label htmlFor="dark">Dark theme</label>
+      </div>
+      <div><h1>Weekly Tasks:</h1></div>
+            <h2>Create new task?</h2>
+        <React.Fragment>
+          <header className={cx(`App-header-theme-${this.state.theme}`)}>
           <TaskAdd onSubmit={this.submitHandler}/>
+          <div className={cx('container')}>
           <TaskList tasksArr={tasks} onClick={this.handleTaskStatus}/>
-      </React.Fragment>)
+          </div>
+          </header>
+        </React.Fragment>
+       </header>
+    )
   }
 }
 
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
+    <div className="App">  
         <div>
-        <div><h1>Weekly Tasks:</h1></div>
           <MyTodoList/>
         </div>
-      </header>
     </div>
   );
 }
