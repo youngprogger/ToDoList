@@ -1,0 +1,110 @@
+.container {
+  display: flex;
+  align-items: flex-start;
+  flex-direction:row;
+  justify-content:flex-start;
+  flex-wrap: wrap;
+}
+.container1 {
+  display: flex;
+  align-items: flex-start;
+  flex-direction:column;
+  flex-wrap: wrap;
+  margin-right: 100px;
+}
+.App {
+    text-align:center;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .App-header {
+    background-color: #282c33;
+    min-height: 100vh;
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+    justify-content:space-between;
+    font-size: calc(10px + 2vmin);
+    font-family: 'Roboto';
+
+    &-theme-light {
+      color: rgb(0, 0, 0);
+      background-color: #ffffff;
+    }
+
+    &-theme-dark {
+    color: white;  
+    background-color: #282c33;
+    }
+  }
+
+  .button1 {
+  
+    width: 200px;
+    height: 50px;
+    display: flex;
+    flex-direction:column;
+    justify-content:center;
+    font-size: 25px;
+    align-items: center;
+    background: rgb(231, 231, 231);
+    border-radius: 20px;
+    border-color: rgba(21, 113, 156, 0);
+    cursor: pointer;
+    margin-left: 100px;
+    color:rgb(10, 1, 36);
+  }
+  .button1:hover {
+    background: rgb(26, 27, 41);;
+    border-radius: 20px ;
+    color:white
+  }
+  .task {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 400px;
+    height: 100px;
+    border-radius: 8px;
+    background: white;
+    color: #282c34;
+    border-radius: 30px;
+    box-shadow: 
+        0px 0px 15px 9px rgba(250, 250, 250, 0.123),
+        0px 0px 15px 9px rgba(243, 243, 243, 0.062);
+        &-button {
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+        }
+      }
+  .task:hover {
+    background:rgb(207, 207, 207);
+    color: rgb(26, 27, 41)
+  }
+  
+  .task h4 {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 100px;
+  }
+  .task:hover h4 {
+    background: rgb(26, 27, 41);;
+    border-radius: 20px ;
+    color:white;
+    font-weight: 1000;
+    
+  }
+  .task p {
+    display: flex;
+    align-items: center;
+    justify-content:center ;
+    color:rgba(0, 0, 0, 0.4);
+    font-size: 200px;
+  }  
+label {
+    color: #7e7d7d;
+  }
+  
