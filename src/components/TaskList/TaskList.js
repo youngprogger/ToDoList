@@ -2,8 +2,12 @@ import React from 'react'
 import Task from '../Task/Task'
 
 const TaskList = ({tasksArr, onClick}) => {
-    return (
-        tasksArr.map( (task) => {
+    var tasks = []
+    for (var i in tasksArr){
+        tasks.push(tasksArr[i])
+    }
+    return ( 
+        tasks.map( (task) => {
             return (
                 <Task
                     key={task.id}

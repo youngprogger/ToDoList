@@ -49,7 +49,6 @@ class TaskInput extends React.Component {
   const TaskAdd = ({onSubmit}) => {
     return (
         <div>
-            <h2>Create new task?</h2>
             <TaskInput onSubmit={onSubmit}/>
         </div>
     )
