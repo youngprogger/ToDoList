@@ -38,7 +38,6 @@
     background-color: #282c33;
     }
   }
-
   .button1 {
   
     width: 200px;
@@ -107,4 +106,18 @@
 label {
     color: #7e7d7d;
   }
-  
+  ul {
+    background: #282c33;
+    padding: 20px;
+    list-style-type: none;  }
+    ul li {
+      color: white;
+      margin: 5px;
+      text-decoration: none;
+    }
+    ul li a {
+      background: #35393d;
+      color: white;
+      margin: 5px;
+      text-decoration: none;
+    }
