@@ -2,12 +2,19 @@ import React from 'react';
 import classnames from "classnames/bind"
 import styles from "./App.module.scss"
 import { BrowserRouter, Switch, Route, Link, Redirect, withRouter } from "react-router-dom"
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
 
+import {handleProjectAdd} from './actions/project'
+import {handleTaskAdd} from './actions/task'
 
 import TaskList from './components/TaskList/TaskList'
 import ProjectList from './components/ProjectList/ProjectList'
 import TaskAdd from './components/TaskAdd/TaskAdd'
 import ProjectAdd from './components/ProjectAdd/ProjectAdd'
+import { rootReducer } from './reducers/reducer'
+
+const store = createStore(rootReducer)
 
 const cx = classnames.bind(styles)
 var projectId;
@@ -160,6 +167,7 @@ class MyTodoList extends React.Component {
       project.tasksIds.push(lastId + 1)
       localStorage.setItem('tasksById', JSON.stringify(this.state.tasksById))
       localStorage.setItem('projectsById', JSON.stringify(this.state.projectsById))
+      handleTaskAdd(lastId+1, name, description);
     }
     else {
       return alert('Enter task name and description')
@@ -177,11 +185,13 @@ class MyTodoList extends React.Component {
       }
       this.setState({projectsById:projects})
       localStorage.setItem('projectsById', JSON.stringify(this.state.projectsById))
-      }
+      handleProjectAdd(lastId+1, name)  
+    }
     else {
       return alert('Enter task name')
     }
   }
+
 
   handleThemeChange = event => {
     this.setState({ theme: event.target.value })
@@ -342,22 +352,26 @@ const SpecificProject = ({ match }) => {
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className={cx(`App-header-theme-dark`)}>
-        <Route path="/" component={Header} />
-        <Route path="/projects/"/>
+    <Provider store={store}>
+      <BrowserRouter>
+        <div className={cx(`App-header-theme-dark`)}>
+          <Route path="/" component={Header} />
+          <Route path="/projects/"/>
 
-        <Switch>
-          <Route exact path="/" component={Projects} />
-          <Route exact path="/projects/" component={Projects} />
-          <Route path="/projects/:projectId/" component={SpecificProject} />
-          <Redirect to="/" />
-        </Switch>
-      </div>
-    </BrowserRouter>
+          <Switch>
+            <Route exact path="/" component={Projects} />
+            <Route exact path="/projects/" component={Projects} />
+            <Route path="/projects/:projectId/" component={SpecificProject} />
+            <Redirect to="/" />
+          </Switch>
+        </div>
+      </BrowserRouter>
+    </Provider>
   );
 }
 
+
+  
 
 
 
