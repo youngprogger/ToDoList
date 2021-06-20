@@ -24,6 +24,7 @@ var projectId;
 
 // Вывод проектов
 const mapStateToPropsProject = (state) => {
+  console.log('PROJECTS', state);
   return ({
     projects: state.projectsByIds.projects
   })
@@ -90,8 +91,9 @@ class ProjectsListComponent extends React.Component {
 
 const ProjectsList = connect(mapStateToPropsProject, mapDispatchToPropsProject)(ProjectsListComponent)
 
+
+
 const mapStateToPropsTask = (state) => {
-  console.log('TASKS STATE',state);
   return({
     projects: state.projectsByIds.projects,
     tasks: state.tasksByIds.tasks
@@ -108,9 +110,6 @@ class TaskListComponent extends React.Component {
       };  
     }
     
-  submitHandler = (name, description) => {
-
-  }
   // submitHandler = (name, description) => {
   //   if (name && description) {
   //     const tasks = this.state.tasksById;
@@ -156,7 +155,7 @@ class TaskListComponent extends React.Component {
   }
 
   render() {
-    const projectId = this.props.projectId.projectId
+    const projectId = this.props.projectId
     const projects = this.props.projects
     let projectTasksIds = []
     Object.values(projects).map(project => Number(projectId) === Number(project.id) ? projectTasksIds = project.tasksIds : null)
@@ -201,8 +200,6 @@ class TaskListComponent extends React.Component {
     )
     }
   }
-
-
 const TasksList = connect(mapStateToPropsTask, mapDispatchToPropsTask)(TaskListComponent)
 
 const Header = () => {
@@ -236,13 +233,14 @@ const Projects = () => {
   }
 
 const SpecificProject = ({ match }) => {
-  projectId = match.params
-  if (!Number(projectId['projectId'])) {
-    return <Redirect to="/" />
-  }
+  projectId = match.params.projectId
+  console.log(projectId);
+  // if (!Number(projectId['projectId'])) {
+  //   return <Redirect to="/" />
+  // }
   return (
       <div className="App">  
-      <h2>Specific Project {projectId['projectId']}</h2>
+      <h2>Specific Project {projectId}</h2>
         <div>
           <TasksList projectId={projectId}/>
         </div>
