@@ -21,14 +21,13 @@ const cx = classnames.bind(styles)
 var projectId;
 
 
-
-const mapStateToProps = (state) => {
-  console.log('STATE',state.projectsByIds.projects);
+// Вывод проектов
+const mapStateToPropsProject = (state) => {
   return ({
     projects: state.projectsByIds.projects
   })
 }
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToPropsProject = (dispatch) => ({
   dispatchOnProjectAdd: (id, name) => dispatch(handleProjectAdd(id, name))
 });
 class ProjectsListComponent extends React.Component {
@@ -41,7 +40,7 @@ class ProjectsListComponent extends React.Component {
     
   
   // submitHandler = (name, description) => {
-  //   console.log(name, description)
+
   //   if (name && description) {
   //     const tasks = this.state.tasksById;
   //     var lastId = Object.keys(tasks).length;
@@ -65,27 +64,8 @@ class ProjectsListComponent extends React.Component {
   
   submitProjectHandler = (name) => {
     const id = this.props.projects.length
-    console.log(id, name );
-    
     return this.props.dispatchOnProjectAdd(id, name)
   }
-  // submitProjectHandler = (name) => {
-  //   if (name != "") {
-  //     const projects = this.state.projectsById;
-  //     var lastId = Object.keys(projects).length;
-  //     projects[lastId+1] = {
-  //       id: lastId+1, 
-  //       name: name,
-  //       tasksIds: []
-  //     }
-  //     this.setState({projectsById:projects})
-  //     localStorage.setItem('projectsById', JSON.stringify(this.state.projectsById))
-  //     handleProjectAdd(lastId+1, name)  
-  //   }
-  //   else {
-  //     return alert('Enter project name')
-  //   }
-  // }
 
 
   handleThemeChange = event => {
@@ -199,9 +179,121 @@ class ProjectsListComponent extends React.Component {
   }
 
 
-const ProjectsList = connect(mapStateToProps, mapDispatchToProps)(ProjectsListComponent)
+const ProjectsList = connect(mapStateToPropsProject, mapDispatchToPropsProject)(ProjectsListComponent)
 
 
+const mapStateToPropsTask = (state) => {
+  console.log(state);
+  return({
+    projects: state.projectsByIds.projects,
+    tasks: state.tasksByIds.tasks
+  })
+}
+
+class TaskListComponent extends React.Component {
+  constructor() {
+    super();
+      this.state = {
+        theme: "dark"
+      };  
+    }
+    
+  
+  // submitHandler = (name, description) => {
+  //   if (name && description) {
+  //     const tasks = this.state.tasksById;
+  //     var lastId = Object.keys(tasks).length;
+  //     tasks[lastId+1] = {
+  //       id: lastId+1, 
+  //       name: name,
+  //       description: description,
+  //       completed: false
+  //     }
+  //     this.setState({tasksById:tasks})
+  //     const project = this.state.projectsById[projectId['projectId']]
+  //     project.tasksIds.push(lastId + 1)
+  //     localStorage.setItem('tasksById', JSON.stringify(this.state.tasksById))
+  //     localStorage.setItem('projectsById', JSON.stringify(this.state.projectsById))
+  //     handleTaskAdd(lastId+1, name, description);
+  //   }
+  //   else {
+  //     return alert('Enter task name and description')
+  //   }
+  // }
+
+  handleThemeChange = event => {
+    this.setState({ theme: event.target.value })
+  }
+
+  searchForTask = (tasksIds, tasksList) => {
+    const specificTasksList = {}
+    Object.values(tasksIds)?.map( taskId => {
+        return Object.values(tasksList).map( (task) => {
+            return task.id.toString() === taskId.toString() 
+            ? specificTasksList[taskId] = task
+            : null
+        })
+    })
+    return specificTasksList
+}
+  
+  handleTaskStatus = (taskID) => {
+    const tasks = this.props.tasks;
+    tasks[taskID].completed = !tasks[taskID].completed
+
+  }
+
+  render() {
+    const projectId = this.props.projectId.projectId
+    const projects = this.props.projects
+    let projectTasksIds = []
+    Object.values(projects).map(project => Number(projectId) === Number(project.id) ? projectTasksIds = project.tasksIds : null)
+    const tasks = this.searchForTask(projectTasksIds, this.props.tasks)
+
+    return (  
+          
+      <header className={cx(`App-header-theme-${this.state.theme}`)}>
+        <div>
+            <input
+              type="radio"
+              name="theme"
+              id="light"
+              value="light"
+              checked={this.state.theme === "light"}
+              onChange={this.handleThemeChange}
+            />
+            <label htmlFor="light">Light theme</label>
+          </div>
+
+          <div>
+            <input
+              type="radio"
+              name="theme"
+              id="dark"
+              value="dark"
+              checked={this.state.theme === "dark"}
+              onChange={this.handleThemeChange}
+            />
+            <label htmlFor="dark">Dark theme</label>
+      </div>
+
+      <div><h1>Weekly Tasks:</h1></div>
+            <h2>Create new task?</h2>
+        <React.Fragment>
+          <header className={cx(`App-header-theme-${this.state.theme}`)}>
+          <TaskAdd onSubmit={this.submitHandler}/>
+          <div className={cx('container')}>
+          <TaskList tasksArr={tasks} onClick={this.handleTaskStatus}/>
+          </div>
+          </header>
+        </React.Fragment>
+       </header>
+    )
+    }
+  }
+
+
+const TasksList = connect(mapStateToPropsTask)(TaskListComponent)
 
 const Header = () => {
   return (
@@ -235,7 +327,6 @@ const Projects = () => {
 
 const SpecificProject = ({ match }) => {
   projectId = match.params
-  console.log('PROJECT ID', projectId);
   if (!Number(projectId['projectId'])) {
     return <Redirect to="/" />
   }
@@ -243,7 +334,7 @@ const SpecificProject = ({ match }) => {
       <div className="App">  
       <h2>Specific Project {projectId['projectId']}</h2>
         <div>
-          {/* <MyTodoList/> */}
+          <TasksList projectId={projectId}/>
         </div>
     </div>
   )

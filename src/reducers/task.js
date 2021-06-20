@@ -1,24 +1,13 @@
 import { ADD_TASK, CHANGE_TASK_STATUS } from '../actions/task'
-var projectsById;
-var tasksById;
-try {projectsById = returnProjectState()}
-catch {projectsById = null}
-try {tasksById = returnTaskState()}
-catch{tasksById = null}
+import state from '../data/state'
+import normalize from '../data/normalizer'
+
+const {projects, tasks} = normalize(state)
 
 const initialState = {
-  projects: projectsById,
-  tasks: tasksById
+  projects,
+  tasks
 }
-
-
-function returnProjectState(){
-    return JSON.parse(localStorage.getItem('projectsById'));  
-  }
-function returnTaskState(){
-    return JSON.parse(localStorage.getItem('tasksById'))
-  }
-
 
 export const taskReducer = (state = initialState, action) => {
     switch (action.type) {
