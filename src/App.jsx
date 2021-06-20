@@ -8,6 +8,7 @@ import { connect } from 'react-redux'
 
 import {handleProjectAdd} from './actions/project'
 import {handleTaskAdd} from './actions/task'
+import {handleTaskStatusChange} from './actions/task'
 
 import TaskList from './components/TaskList/TaskList'
 import ProjectList from './components/ProjectList/ProjectList'
@@ -37,108 +38,17 @@ class ProjectsListComponent extends React.Component {
         theme: "dark"
       };  
     }
-    
-  
-  // submitHandler = (name, description) => {
-
-  //   if (name && description) {
-  //     const tasks = this.state.tasksById;
-  //     var lastId = Object.keys(tasks).length;
-  //     tasks[lastId+1] = {
-  //       id: lastId+1, 
-  //       name: name,
-  //       description: description,
-  //       completed: false
-  //     }
-  //     this.setState({tasksById:tasks})
-  //     const project = this.state.projectsById[projectId['projectId']]
-  //     project.tasksIds.push(lastId + 1)
-  //     localStorage.setItem('tasksById', JSON.stringify(this.state.tasksById))
-  //     localStorage.setItem('projectsById', JSON.stringify(this.state.projectsById))
-  //     handleTaskAdd(lastId+1, name, description);
-  //   }
-  //   else {
-  //     return alert('Enter task name and description')
-  //   }
-  // }
   
   submitProjectHandler = (name) => {
     const id = this.props.projects.length
     return this.props.dispatchOnProjectAdd(id, name)
   }
 
-
   handleThemeChange = event => {
     this.setState({ theme: event.target.value })
   }
-  
-  // handleTaskStatus = (taskID) => {
-  //   const tasks = this.state.tasksById;
-  //   tasks[taskID].completed = !tasks[taskID].completed
-  //   this.setState({tasksById:tasks})
-  //   localStorage.setItem('state', JSON.stringify(this.state))
-  // }
 
   render() {
-
-    // if (projectId != null){
-    //   const tmptasks = this.state.tasksById
-    //   const tmpproject = this.state.projectsById[projectId['projectId']]
-    //   if (tmpproject === undefined){
-    //     return <Redirect to="/" />
-    //   }
-    //   var tasks = []
-    // for (var i in tmptasks){
-    //   if (tmpproject.tasksIds.some(v => v === tmptasks[i].id)){
-    //     tasks.push(tmptasks[i])
-    //   }
-    // }
-    // return (  
-          
-    //   <header className={cx(`App-header-theme-${this.state.theme}`)}>
-    //     <div>
-    //         <input
-    //           type="radio"
-    //           name="theme"
-    //           id="light"
-    //           value="light"
-    //           checked={this.state.theme === "light"}
-    //           onChange={this.handleThemeChange}
-    //         />
-    //         <label htmlFor="light">Light theme</label>
-    //       </div>
-
-    //       <div>
-    //         <input
-    //           type="radio"
-    //           name="theme"
-    //           id="dark"
-    //           value="dark"
-    //           checked={this.state.theme === "dark"}
-    //           onChange={this.handleThemeChange}
-    //         />
-    //         <label htmlFor="dark">Dark theme</label>
-    //   </div>
-
-    //   <div><h1>Weekly Tasks:</h1></div>
-    //         <h2>Create new task?</h2>
-    //     <React.Fragment>
-    //       <header className={cx(`App-header-theme-${this.state.theme}`)}>
-    //       <TaskAdd onSubmit={this.submitHandler}/>
-    //       <div className={cx('container')}>
-    //       {/* <TaskList tasksArr={tasks} onClick={this.handleTaskStatus}/> */}
-    //       </div>
-    //       </header>
-    //     </React.Fragment>
-    //    </header>
-    // )
-    // }
-    // else{
-    // const tmpprojects = this.state.projectsById;
-    // var projects = []
-    // for (var i in tmpprojects){
-    //     projects.push(tmpprojects[i])
-    //   }
     return (  
       <header className={cx(`App-header-theme-${this.state.theme}`)}>
         <div>
@@ -178,18 +88,18 @@ class ProjectsListComponent extends React.Component {
     }
   }
 
-
 const ProjectsList = connect(mapStateToPropsProject, mapDispatchToPropsProject)(ProjectsListComponent)
 
-
 const mapStateToPropsTask = (state) => {
-  console.log(state);
+  console.log('TASKS STATE',state);
   return({
     projects: state.projectsByIds.projects,
     tasks: state.tasksByIds.tasks
   })
 }
-
+const mapDispatchToPropsTask = (dispatch) => ({
+  dispatchOnTaskStatusChanged: (id, completed) => dispatch(handleTaskStatusChange(id, completed))
+})
 class TaskListComponent extends React.Component {
   constructor() {
     super();
@@ -198,7 +108,9 @@ class TaskListComponent extends React.Component {
       };  
     }
     
-  
+  submitHandler = (name, description) => {
+
+  }
   // submitHandler = (name, description) => {
   //   if (name && description) {
   //     const tasks = this.state.tasksById;
@@ -239,8 +151,8 @@ class TaskListComponent extends React.Component {
   
   handleTaskStatus = (taskID) => {
     const tasks = this.props.tasks;
-    tasks[taskID].completed = !tasks[taskID].completed
-
+    const completed = tasks[taskID].completed
+    return this.props.dispatchOnTaskStatusChanged(taskID, completed)
   }
 
   render() {
@@ -251,7 +163,6 @@ class TaskListComponent extends React.Component {
     const tasks = this.searchForTask(projectTasksIds, this.props.tasks)
 
     return (  
-          
       <header className={cx(`App-header-theme-${this.state.theme}`)}>
         <div>
             <input
@@ -276,7 +187,6 @@ class TaskListComponent extends React.Component {
             />
             <label htmlFor="dark">Dark theme</label>
       </div>
-
       <div><h1>Weekly Tasks:</h1></div>
             <h2>Create new task?</h2>
         <React.Fragment>
@@ -293,7 +203,7 @@ class TaskListComponent extends React.Component {
   }
 
 
-const TasksList = connect(mapStateToPropsTask)(TaskListComponent)
+const TasksList = connect(mapStateToPropsTask, mapDispatchToPropsTask)(TaskListComponent)
 
 const Header = () => {
   return (
