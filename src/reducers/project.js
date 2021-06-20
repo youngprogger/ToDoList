@@ -1,35 +1,29 @@
-import { ADD_PROJECT } from '../actions/project'
-var projectsById;
-try {projectsById = returnProjectState()}
-catch {projectsById = null}
+import { PROJECT_ADD } from '../actions/project'
+import state from '../data/state'
+import normalize from '../data/normalizer'
 
+const {projects} = normalize(state)
 const initialState = {
-  projects: projectsById,
+  projects
 }
 
-
-function returnProjectState(){
-    return JSON.parse(localStorage.getItem('projectsById'));  
-  }
-
 export const projectReducer = (state = initialState, action) => {
-        switch (action.type) {
-          case ADD_PROJECT: {
-            console.log("add_start")
-            const Id = action.id
-            const ProjectList = {...state.projects}
-            ProjectList[Id] = {
-                id: action.id,
-                name: action.name,
-                description: action.description,
-                tasksIds: []
-            }
-            return {
-              ...state,
-              projects: ProjectList
-            }
-          }
-          default:
-            return state;
-        }
-      };
+  switch (action.type) {
+    case PROJECT_ADD: {
+      const newProjId = action.id
+      const newProjectsList = {...state.projects}
+      newProjectsList[newProjId] = {
+          id: action.id,
+          name: action.name,
+          tasksIds: []
+      }
+      
+      return {
+        ...state,
+        projects: newProjectsList
+      }
+    }
+    default:
+      return state;
+  }
+};

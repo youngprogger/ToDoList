@@ -1,7 +1,7 @@
-export const ADD_PROJECT = 'ADD_PROJECT'
+export const PROJECT_ADD = 'PROJECT_ADD'
 
 export const handleProjectAdd = (id, name) => ({
-    type: ADD_PROJECT,
+    type: PROJECT_ADD,
     id: id,
     name: name,
     tasksIds: []

@@ -1,6 +1,17 @@
 import React from 'react'
+import {connect} from 'react-redux'
+import {handleProjectAdd} from '../../actions/project'
 import classes from './ProjectAdd.module.css'
 import '../../App.css'
+
+const mapStateToProps = (state) => {
+  console.log(state);
+  return state
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  dispatchOnProjectAdd: (id, name) => dispatch(handleProjectAdd(id, name))
+})
 
 class ProjectInput extends React.Component {
     state = {
@@ -37,7 +48,7 @@ class ProjectInput extends React.Component {
     }
   }
 
-  const ProjectAdd = ({onSubmit}) => {
+  const ProjectAddComponent = ({onSubmit}) => {
     return (
         <div>
             <ProjectInput onSubmit={onSubmit}/>
@@ -45,5 +56,4 @@ class ProjectInput extends React.Component {
     )
   }
   
-  
-  export default ProjectAdd
+export const ProjectAdd = connect(mapStateToProps, mapDispatchToProps)(ProjectAddComponent)
